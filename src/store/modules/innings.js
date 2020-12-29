@@ -13,11 +13,9 @@ export default {
   },
   actions: {
     async addMatch({ dispatch }, match) {
-      debugger;
       await firebase.matchesCollection
         .add(match)
         .then(() => {
-          debugger;
           dispatch("fetchMatch", match);
         })
         .catch((error) => {
