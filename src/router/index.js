@@ -22,6 +22,11 @@ const routes = [
     name: "Play",
     component: () => import("../views/Play.vue"),
   },
+  {
+    path: "/scorecard",
+    name: "Scorecard",
+    component: () => import("../views/Scorecard.vue"),
+  },
 ];
 
 const router = createRouter({

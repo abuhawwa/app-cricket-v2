@@ -8,7 +8,6 @@ export default {
   mutations: {
     INNINGS(state, innings) {
       state.innings = innings;
-      router.push({ name: "Play" });
     },
   },
   actions: {
@@ -31,17 +30,17 @@ export default {
             commit("INNINGS", item.data());
           });
         });
+      router.push({ name: "Play" });
     },
     async addIngsPlayers({ dispatch }, innings) {
-      debugger;
       const ings = await firebase.matchesCollection
         .where("id", "==", innings.id)
         .get();
       ings.forEach((doc) => {
-        debugger;
         firebase.matchesCollection.doc(doc.id).update(innings);
       });
       dispatch("fetchMatch", innings);
+      router.push({ name: "Scorecard" });
     },
   },
   getters: {
