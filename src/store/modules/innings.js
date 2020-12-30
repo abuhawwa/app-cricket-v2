@@ -2,9 +2,9 @@ import * as firebase from "@/firebase";
 import router from "@/router";
 
 export default {
-  state: {
+  state: () => ({
     innings: [],
-  },
+  }),
   mutations: {
     INNINGS(state, innings) {
       state.innings = innings;
@@ -16,31 +16,33 @@ export default {
         .add(match)
         .then(() => {
           dispatch("fetchMatch", match);
+          router.push({ name: "Play", params: { matchId: match.id } });
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    async fetchMatch({ commit }, innings) {
+    async fetchMatch({ commit }, match) {
       await firebase.matchesCollection
-        .where("id", "==", innings.id)
+        .where("id", "==", parseInt(match.id))
         .get()
-        .then((res) => {
-          res.forEach((item) => {
+        .then((querySnapshot) => {
+          querySnapshot.forEach((item) => {
             commit("INNINGS", item.data());
           });
         });
-      router.push({ name: "Play" });
     },
-    async addIngsPlayers({ dispatch }, innings) {
-      const ings = await firebase.matchesCollection
-        .where("id", "==", innings.id)
-        .get();
-      ings.forEach((doc) => {
-        firebase.matchesCollection.doc(doc.id).update(innings);
-      });
-      dispatch("fetchMatch", innings);
-      router.push({ name: "Scorecard" });
+    async addIngsPlayers({ dispatch }, match) {
+      await firebase.matchesCollection
+        .where("id", "==", parseInt(match.id))
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            firebase.matchesCollection.doc(doc.id).update(match);
+          });
+        });
+      dispatch("fetchMatch", match);
+      router.push({ name: "Scorecard", params: { match: match.id } });
     },
   },
   getters: {

@@ -21,20 +21,13 @@
         href="#"
         :class="['nav-link', { active: currentTab === 'Summary' }]"
         @click="currentTab = 'Summary'"
-        >Score Card</a
+        >Summary</a
       >
     </li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane fade show active">
-      <Suspense>
-        <template #default>
-          <component :is="currentTabComponent"></component>
-        </template>
-        <template #fallback>
-          <span>Loading... Please wait.</span>
-        </template>
-      </Suspense>
+      <component :is="currentTabComponent"></component>
     </div>
   </div>
 </template>

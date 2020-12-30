@@ -18,12 +18,12 @@ const routes = [
     component: () => import("../views/Match.vue"),
   },
   {
-    path: "/play",
+    path: "/match/:matchId/play",
     name: "Play",
     component: () => import("../views/Play.vue"),
   },
   {
-    path: "/scorecard",
+    path: "/match/:matchId/scorecard",
     name: "Scorecard",
     component: () => import("../views/Scorecard.vue"),
   },

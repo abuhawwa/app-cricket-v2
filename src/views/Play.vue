@@ -33,7 +33,7 @@
           />
           <label for="bowler">Bowler Name</label>
         </div>
-        <button type="submit" class="btn btn-success d-block ml-auto">
+        <button type="submit" class="btn btn-success d-block ms-auto">
           Let's Play
         </button>
       </form>
@@ -42,20 +42,23 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "Play",
   data() {
     return {
-      innings: {},
       striker: "",
       nonStriker: "",
       bowler: "",
     };
   },
+  computed: {
+    ...mapGetters(["innings"]),
+  },
   methods: {
     onPlay() {
-      debugger;
-      let innings = this.innings;
+      let innings = JSON.parse(JSON.stringify(this.innings));
       const batsmans = [{ name: this.striker }, { name: this.nonStriker }];
       const bowlers = [{ name: this.bowler }];
       var ings = !innings.firstIngs.isEnd ? "firstIngs" : "secondIngs";
@@ -67,12 +70,14 @@ export default {
       innings[ings].bowlers.map((item, index) => {
         item.id = index + 1;
       });
-      debugger;
       this.$store.dispatch("addIngsPlayers", innings);
     },
   },
-  mounted() {
-    this.innings = this.$store.getters.innings;
+  created() {
+    let payload = {};
+    payload.id = this.$route.params.matchId;
+    const getIngs = this.$store.getters.innings;
+    if (!getIngs.length) this.$store.dispatch("fetchMatch", payload);
   },
 };
 </script>
