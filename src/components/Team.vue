@@ -15,7 +15,7 @@
       </li>
     </ul> -->
     <Batsman :ingsBatsmans="innings.batsmans" />
-    <Bowler :ingsBowlers="innings.bowlers" />
+    <!-- <Bowler :ingsBowlers="innings.bowlers" /> -->
     <!-- <Over />
     <ScorePanel /> -->
   </div>
@@ -25,7 +25,7 @@
 // import { mapGetters } from "vuex";
 import { defineAsyncComponent } from "vue";
 const Batsman = defineAsyncComponent(() => import("@/components/Batsman.vue"));
-const Bowler = defineAsyncComponent(() => import("@/components/Bowler.vue"));
+// const Bowler = defineAsyncComponent(() => import("@/components/Bowler.vue"));
 // const Over = defineAsyncComponent(() => import("@/components/Over.vue"));
 // const ScorePanel = defineAsyncComponent(() =>
 //   import("@/components/ScorePanel.vue")
@@ -41,7 +41,7 @@ export default {
   },
   components: {
     Batsman,
-    Bowler,
+    // Bowler,
     // Over,
     // ScorePanel,
   },

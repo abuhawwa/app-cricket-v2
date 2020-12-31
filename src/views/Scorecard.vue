@@ -27,7 +27,9 @@
   </ul>
   <div class="tab-content">
     <div class="tab-pane fade show active">
-      <component :is="currentTabComponent"></component>
+      <keep-alive>
+        <component :is="currentTabComponent"></component>
+      </keep-alive>
     </div>
   </div>
 </template>
