@@ -92,6 +92,7 @@
   </div>
 </template>
 
+
 <script>
 import { Modal } from "bootstrap";
 import { defineAsyncComponent } from "vue";
@@ -105,11 +106,6 @@ export default {
     return {
       currentModal: "",
       modal: null,
-      extra: "",
-      wicket: {
-        batter: "",
-        dismissalType: "",
-      },
     };
   },
   components: {
@@ -120,79 +116,84 @@ export default {
     ...mapGetters(["getStriker", "getBowler", "getBatters"]),
   },
   methods: {
-    onUndo() {
-      const ings = this.ings;
-      this.$store.commit("UNDO_INNINGS", ings);
-    },
     onExtra(extra) {
-      this.extra = extra;
       this.modal.hide();
       document.getElementById("modalForm").reset();
-      this.score(extra);
-      this.extra = "";
+      this.score(extra, "extra");
     },
     onOut(wicket) {
-      this.wicket = wicket;
       this.modal.hide();
       document.getElementById("modalForm").reset();
-      this.score(0);
-      this.wicket = {
-        batter: "",
-        dismissalType: "",
-      };
+      this.score(wicket, "wicket");
     },
     onOver() {
-      const ings = this.ings;
-      this.$store.commit("ADD_OVER_TO_INNINGS", ings);
+      // const ings = this.ings;
+      // this.$store.dispatch("ADD_OVER_TO_INNINGS", ings);
     },
-    score(num) {
-      debugger;
-      var nonStriker = {};
+    onUndo() {
+      const ings = this.ings;
+      this.$store.dispatch("UNDO_INGS", ings);
+    },
+    score(num, type = "score") {
+      let striker = this.getStriker;
+      let nonStriker = {};
       this.getBatters.filter((item) => {
-        if (item.id !== this.getStriker.id) nonStriker = item;
+        if (item.id !== striker.id) nonStriker = item;
       });
-      const run = !this.extra ? num : 0;
-      const extra = this.extra.split("-");
+      let bowler = this.getBowler;
+      const runs = ["extra", "wicket"].includes(type) ? 0 : num;
+      const extra = type === "extra" ? num.split("-") : "";
       const bye = ["bye"].includes(extra[0]) ? parseInt(extra[1]) : 0;
       const legBye = ["legBye"].includes(extra[0]) ? parseInt(extra[1]) : 0;
       const wide = ["wide"].includes(extra[0]) ? parseInt(extra[1]) : 0;
-      const noball = ["noBall"].includes(extra[0]) ? parseInt(extra[1]) : 0;
-      const noballRunBatsman = ["noBallRun"].includes(extra[0])
+      const noBall = ["noBall"].includes(extra[0]) ? parseInt(extra[1]) : 0;
+      const noBallRunBatsman = ["noBallRun"].includes(extra[0])
         ? parseInt(extra[1] - 1)
         : 0;
-      const noballRunBowler = ["noBallRun"].includes(extra[0]) ? 1 : 0;
+      const noBallRunBowler = ["noBallRun"].includes(extra[0]) ? 1 : 0;
       const isExtra = ["wide", "noBall", "noBallRun"].includes(extra[0]);
       const ings = this.ings;
+      const isWicket = type == "wicket" ? true : false;
+      const wicket = isWicket ? num : {};
       let obj = {
         batsman: {
           striker: {
-            name: this.getStriker.name,
-            id: this.getStriker.id,
-            runs: run || noballRunBatsman,
+            name: striker.name,
+            id: striker.id,
+            runs: runs || noBallRunBatsman,
             ball: wide ? 0 : 1,
-            four: run === 4 ? 1 : 0,
-            six: run === 6 ? 1 : 0,
-            isOut: this.wicket.batter.id === this.getStriker.id ? true : false,
+            four: runs === 4 ? 1 : 0,
+            six: runs === 6 ? 1 : 0,
+            isOut: isWicket
+              ? wicket.batter.id === striker.id
+                ? true
+                : false
+              : false,
           },
           nonStriker: {
             name: nonStriker.name,
             id: nonStriker.id,
-            isOut: this.wicket.batter.id === nonStriker.id ? true : false,
+            isOut: isWicket
+              ? wicket.batter.id === nonStriker.id
+                ? true
+                : false
+              : false,
           },
         },
         bowler: {
-          name: this.getBowler.name,
-          id: this.getBowler.id,
+          name: bowler.name,
+          id: bowler.id,
           ball: isExtra ? 0 : 1,
-          runs: run || noballRunBatsman,
-          wicket:
-            this.wicket.dismissalType && this.wicket.dismissalType !== "run out"
+          runs: runs || noBallRunBatsman,
+          wicket: isWicket
+            ? wicket.dismissalType && wicket.dismissalType !== "run out"
               ? 1
-              : 0,
-          dismissal_type: this.wicket.dismissalType,
+              : 0
+            : 0,
+          dismissal_type: isWicket ? wicket.dismissalType : "",
           extras: {
             wide: wide,
-            noball: noball || noballRunBowler,
+            noBall: noBall || noBallRunBowler,
           },
           isExtra: isExtra,
         },
@@ -209,6 +210,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

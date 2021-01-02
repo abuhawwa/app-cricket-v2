@@ -1,7 +1,7 @@
 <template>
   <div class="team">
     <h6>{{ innings.team }}</h6>
-    <!-- <ul
+    <ul
       class="list-unstyled d-flex justify-content-between align-items-baseline"
     >
       <li>
@@ -13,23 +13,23 @@
       <li>
         <h6>Extras: {{ score.extras }}</h6>
       </li>
-    </ul> -->
+    </ul>
     <Batsman :ingsBatsmans="innings.batsmans" />
-    <!-- <Bowler :ingsBowlers="innings.bowlers" /> -->
-    <!-- <Over />
-    <ScorePanel /> -->
+    <Bowler :ingsBowlers="innings.bowlers" />
+    <Over :data="innings.overs" />
+    <ScorePanel />
   </div>
 </template>
 
 <script>
-// import { mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { defineAsyncComponent } from "vue";
 const Batsman = defineAsyncComponent(() => import("@/components/Batsman.vue"));
-// const Bowler = defineAsyncComponent(() => import("@/components/Bowler.vue"));
-// const Over = defineAsyncComponent(() => import("@/components/Over.vue"));
-// const ScorePanel = defineAsyncComponent(() =>
-//   import("@/components/ScorePanel.vue")
-// );
+const Bowler = defineAsyncComponent(() => import("@/components/Bowler.vue"));
+const Over = defineAsyncComponent(() => import("@/components/Over.vue"));
+const ScorePanel = defineAsyncComponent(() =>
+  import("@/components/ScorePanel.vue")
+);
 
 export default {
   name: "Team",
@@ -41,15 +41,12 @@ export default {
   },
   components: {
     Batsman,
-    // Bowler,
-    // Over,
-    // ScorePanel,
+    Bowler,
+    Over,
+    ScorePanel,
   },
   computed: {
-    // ...mapGetters(["score"]),
-    // overLimit() {
-    //   return this.$store.getters.overLimit;
-    // },
+    ...mapGetters(["score", "overLimit"]),
   },
 };
 </script>

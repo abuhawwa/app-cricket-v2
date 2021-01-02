@@ -1,5 +1,3 @@
-import * as firebase from "@/firebase";
-
 export default {
   state: () => ({
     batters: [],
@@ -14,5 +12,8 @@ export default {
     },
   },
   actions: {},
-  getters: {},
+  getters: {
+    getBatters: (state) => state.batters,
+    getStriker: (state) => state.activeBatsman,
+  },
 };

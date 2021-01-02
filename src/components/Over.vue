@@ -1,15 +1,23 @@
 <template>
-  <table class="table mb-0">
+  <table class="table mb-0" v-if="balls.length">
     <thead>
       <tr>
-        <th class="w-50" colspan="7">This Over</th>
+        <th class="w-50" :colspan="balls.length">This Over</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="text-center">
+      <tr>
         <td v-for="(ball, index) in balls" :key="index">
-          <template v-if="ball.extra">
-            {{ ball.runs + ball.extra }}
+          <template v-if="ball.isExtra">
+            <span v-if="ball.runs">
+              {{ ball.runs }}
+              {{ ball.extras.wide ? "wd" : null }}
+              {{ ball.extras.noBall ? "nb" : null }}
+            </span>
+            <span v-if="ball.extras.wide">{{ ball.extras.wide - 1 }} wd </span>
+            <span v-if="ball.extras.noBall">
+              {{ ball.extras.noBall - 1 }} nb
+            </span>
           </template>
           <template v-else>
             {{ ball.runs }}
@@ -31,7 +39,19 @@ export default {
   },
   computed: {
     balls() {
-      return this.data;
+      let overs = [];
+      let lastOver = [];
+      let balls = [];
+      overs = JSON.parse(JSON.stringify(this.data));
+      if (overs.length) {
+        lastOver = overs[overs.length - 1].over;
+        lastOver.forEach((item) => {
+          item.balls.forEach((ball) => {
+            balls.push(ball.bowler);
+          });
+        });
+      }
+      return balls;
     },
   },
 };
