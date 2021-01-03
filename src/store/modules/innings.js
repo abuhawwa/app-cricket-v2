@@ -18,7 +18,15 @@ export default {
     },
     UNDO_INGS(state, ings) {
       const overs = state.innings[ings].overs;
-      overs.splice(-1, 1);
+      const lastOver = overs[overs.length - 1].over;
+      lastOver.forEach((item) => {
+        const lastItem = item.balls.length - 1;
+        item.balls.forEach((ball, index) => {
+          if (index === lastItem) {
+            item.balls.splice(lastItem, 1);
+          }
+        });
+      });
     },
     ADD_SCORE_TO_INNINGS(state, { ings, obj }) {
       if (!state.innings[ings].overs) {

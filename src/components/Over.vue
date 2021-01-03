@@ -6,17 +6,15 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr class="d-flex">
         <td v-for="(ball, index) in balls" :key="index">
           <template v-if="ball.isExtra">
-            <span v-if="ball.runs">
-              {{ ball.runs }}
-              {{ ball.extras.wide ? "wd" : null }}
-              {{ ball.extras.noBall ? "nb" : null }}
+            <span v-if="ball.extras.wide"
+              >{{ ball.extras.wide }}<small style="fon-size: 0.5rem">wd</small>
             </span>
-            <span v-if="ball.extras.wide">{{ ball.extras.wide - 1 }} wd </span>
             <span v-if="ball.extras.noBall">
-              {{ ball.extras.noBall - 1 }} nb
+              {{ ball.runs + ball.extras.noBall
+              }}<small style="fon-size: 0.5rem">nb</small>
             </span>
           </template>
           <template v-else>

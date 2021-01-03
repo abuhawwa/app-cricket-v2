@@ -11,10 +11,8 @@
         <td>
           <button type="button" class="btn w-100" @click="score(2)">2</button>
         </td>
-        <td class="bg-success" rowspan="3">
-          <button type="button" class="btn w-100 text-white" @click="onUndo">
-            Undo
-          </button>
+        <td class="bg-success" rowspan="3" @click="onUndo">
+          <button type="button" class="btn w-100 text-white">Undo</button>
         </td>
       </tr>
       <tr class="bg-light">
@@ -132,7 +130,7 @@ export default {
     },
     onUndo() {
       const ings = this.ings;
-      this.$store.dispatch("UNDO_INGS", ings);
+      this.$store.commit("UNDO_INGS", ings);
     },
     score(num, type = "score") {
       let striker = this.getStriker;
