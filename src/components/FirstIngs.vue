@@ -23,7 +23,8 @@ export default {
     let payload = {};
     payload.id = this.$route.params.matchId;
     const getIngs = this.$store.getters.innings;
-    if (!getIngs.length) this.$store.dispatch("fetchMatch", payload);
+    if (!Object.keys(getIngs).length)
+      this.$store.dispatch("fetchMatch", payload);
   },
 };
 </script>
