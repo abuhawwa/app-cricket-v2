@@ -11,7 +11,7 @@
         <td>
           <button type="button" class="btn w-100" @click="score(2)">2</button>
         </td>
-        <td class="bg-success" rowspan="3" @click="onUndo">
+        <td class="bg-success" rowspan="2" @click="onUndo">
           <button type="button" class="btn w-100 text-white">Undo</button>
         </td>
       </tr>
@@ -53,6 +53,9 @@
           <button type="button" class="btn w-100 text-white" @click="onOver">
             Over
           </button>
+        </td>
+        <td class="bg-secondary">
+          <button type="button" class="btn w-100 text-white">Ings End</button>
         </td>
       </tr>
     </tbody>
