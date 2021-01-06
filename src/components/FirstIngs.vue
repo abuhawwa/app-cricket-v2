@@ -22,9 +22,10 @@ export default {
   created() {
     let payload = {};
     payload.id = this.$route.params.matchId;
-    const getIngs = this.$store.getters.innings;
-    if (!Object.keys(getIngs).length)
-      this.$store.dispatch("fetchMatch", payload);
+    const getIngs =
+      this.$store.getters.innings.firstIngs?.batsmans ||
+      this.$store.getters.innings.firstIngs?.bowlers;
+    if (!getIngs) this.$store.dispatch("fetchMatch", payload);
   },
 };
 </script>

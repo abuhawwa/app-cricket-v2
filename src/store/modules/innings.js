@@ -17,7 +17,6 @@ export default {
       state.innings = innings;
     },
     UNDO_INGS(state, ings) {
-      debugger;
       const overs = state.innings[ings].overs;
       const lastOver = overs[overs.length - 1].over;
       lastOver.forEach((item) => {
@@ -197,6 +196,9 @@ export default {
       router.push({ name: "Scorecard", params: { match: match.id } });
     },
     async updateScore({ state, commit }, ings) {
+      commit("INDIVIDUAL_BATSMAN_SCORE", ings);
+      commit("INDIVIDUAL_BOWLER_SCORE", ings);
+      commit("TEAM_SCORE", ings);
       const innings = state.innings;
       await firebase.matchesCollection
         .where("id", "==", parseInt(innings.id))
@@ -206,10 +208,6 @@ export default {
             firebase.matchesCollection.doc(doc.id).update(innings);
           });
         });
-      debugger;
-      commit("INDIVIDUAL_BATSMAN_SCORE", ings);
-      commit("INDIVIDUAL_BOWLER_SCORE", ings);
-      commit("TEAM_SCORE", ings);
     },
   },
   getters: {
