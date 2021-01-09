@@ -45,19 +45,27 @@ export default {
   },
   computed: {
     bowlers() {
-      return this.ingsBowlers;
+      let bowlers = this.ingsBowlers;
+      this.$store.commit("BOWLERS", bowlers);
+      return bowlers;
     },
     currentBowler: {
       get() {
-        return this.$store.getters.getBowler;
+        return this.$store.getters.getActiveBowler;
       },
       set(newVal) {
+        debugger;
         this.$store.commit("ACTIVE_BOWLER", newVal);
       },
     },
   },
   created() {
-    this.$store.commit("ACTIVE_BOWLER", this.bowlers[0]);
+    const bowlers = this.bowlers;
+    let activeBowler = {};
+    bowlers.filter((item) => {
+      if (item.isCurrent) activeBowler = item;
+    });
+    this.$store.commit("ACTIVE_BOWLER", activeBowler);
   },
 };
 </script>

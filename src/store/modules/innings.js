@@ -48,6 +48,7 @@ export default {
     INDIVIDUAL_BATSMAN_SCORE(state, ings) {
       let batsmans = state.innings[ings].batsmans;
       let overs = state.innings[ings].overs;
+      if (!overs) return false;
       batsmans.forEach((batsman) => {
         let runs = 0;
         let balls = 0;
@@ -85,6 +86,7 @@ export default {
     INDIVIDUAL_BOWLER_SCORE(state, ings) {
       let bowlers = state.innings[ings].bowlers;
       let overs = state.innings[ings].overs;
+      if (!overs) return false;
       bowlers.forEach((bowler) => {
         let runs = 0;
         let balls = 0;
@@ -131,6 +133,7 @@ export default {
     },
     TEAM_SCORE(state, ings) {
       let overs = state.innings[ings].overs;
+      if (!overs) return false;
       let score = state.score;
       let total = 0;
       let balls = 0;
@@ -159,6 +162,27 @@ export default {
           });
         });
       });
+    },
+    ADD_BOWLER(state, { ings, overBowler }) {
+      debugger;
+      let bowlers = state.innings[ings].bowlers;
+      bowlers.filter((item) => {
+        item.isCurrent = false;
+      });
+      let bowler = {};
+      if (overBowler.bowler) {
+        bowler = {
+          name: overBowler.bowler,
+          id: bowlers.length + 1,
+          isCurrent: true,
+        };
+        bowlers.push(bowler);
+      } else {
+        bowler = {
+          name: overBowler.existingBowler,
+        };
+      }
+      this.dispatch("updateScore", ings);
     },
   },
   actions: {

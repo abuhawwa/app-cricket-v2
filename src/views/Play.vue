@@ -60,7 +60,7 @@ export default {
     onPlay() {
       let innings = JSON.parse(JSON.stringify(this.innings));
       const batsmans = [{ name: this.striker }, { name: this.nonStriker }];
-      const bowlers = [{ name: this.bowler }];
+      const bowlers = [{ name: this.bowler, isCurrent: true }];
       var ings = !innings.firstIngs.isEnd ? "firstIngs" : "secondIngs";
       innings[ings].batsmans = batsmans;
       innings[ings].bowlers = bowlers;

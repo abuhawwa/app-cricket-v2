@@ -50,7 +50,13 @@
           </button>
         </td>
         <td class="bg-primary">
-          <button type="button" class="btn w-100 text-white" @click="onOver">
+          <button
+            type="button"
+            class="btn w-100 text-white"
+            data-bs-toggle="modal"
+            data-bs-target="#modal"
+            @click="currentModal = 'Over'"
+          >
             Over
           </button>
         </td>
@@ -75,7 +81,13 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modalLabel">
-            {{ currentModal === "Extra" ? "Innings Extra" : "Innings Wicket" }}
+            {{
+              currentModal === "Extra"
+                ? "Innings Extra"
+                : currentModal === "Wicket"
+                ? "Innings Wicket"
+                : "Innings Bowler"
+            }}
           </h5>
           <button
             type="button"
@@ -87,6 +99,7 @@
         <div class="modal-body">
           <Extra v-if="currentModal === 'Extra'" @extra="onExtra" />
           <Wicket v-if="currentModal === 'Wicket'" @out="onOut" />
+          <OverBowler v-if="currentModal === 'Over'" @over="onOver" />
         </div>
       </div>
     </div>
@@ -100,6 +113,9 @@ import { defineAsyncComponent } from "vue";
 import { mapGetters } from "vuex";
 const Extra = defineAsyncComponent(() => import("@/components/Extra.vue"));
 const Wicket = defineAsyncComponent(() => import("@/components/Wicket.vue"));
+const OverBowler = defineAsyncComponent(() =>
+  import("@/components/OverBowler.vue")
+);
 export default {
   name: "ScorePanel",
   inject: ["ings"],
@@ -112,9 +128,10 @@ export default {
   components: {
     Extra,
     Wicket,
+    OverBowler,
   },
   computed: {
-    ...mapGetters(["getStriker", "getBowler", "getBatters"]),
+    ...mapGetters(["getStriker", "getActiveBowler", "getBatters"]),
   },
   methods: {
     onExtra(extra) {
@@ -127,9 +144,10 @@ export default {
       document.getElementById("modalForm").reset();
       this.score(wicket, "wicket");
     },
-    onOver() {
-      // const ings = this.ings;
-      // this.$store.dispatch("ADD_OVER_TO_INNINGS", ings);
+    onOver(overBowler) {
+      debugger;
+      const ings = this.ings;
+      this.$store.commit("ADD_BOWLER", { ings, overBowler });
     },
     onUndo() {
       const ings = this.ings;
@@ -141,7 +159,7 @@ export default {
       this.getBatters.filter((item) => {
         if (item.id !== striker.id) nonStriker = item;
       });
-      let bowler = this.getBowler;
+      let bowler = this.getActiveBowler;
       const runs = ["extra", "wicket"].includes(type) ? 0 : num;
       const extra = type === "extra" ? num.split("-") : "";
       const bye = ["bye"].includes(extra[0]) ? parseInt(extra[1]) : 0;
